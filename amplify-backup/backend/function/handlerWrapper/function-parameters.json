@@ -1,0 +1,35 @@
+{
+  "permissions": {
+    "api": {
+      "lsApi": [
+        "create",
+        "read",
+        "update",
+        "delete"
+      ]
+    },
+    "auth": {
+      "lsAuth": [
+        "create",
+        "read",
+        "update",
+        "delete"
+      ]
+    },
+    "function": {
+      "handler": [
+        "create",
+        "read",
+        "update",
+        "delete"
+      ],
+      "disableEvent": [
+        "create",
+        "read",
+        "update",
+        "delete"
+      ]
+    }
+  },
+  "lambdaLayers": []
+}

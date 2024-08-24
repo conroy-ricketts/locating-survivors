@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "function": {
+      "emailSender": [
+        "create",
+        "read",
+        "update",
+        "delete"
+      ],
+      "emailScraper": [
+        "create",
+        "read",
+        "update",
+        "delete"
+      ],
+      "emailListener": [
+        "create",
+        "read",
+        "update",
+        "delete"
+      ]
+    }
+  },
+  "lambdaLayers": []
+}

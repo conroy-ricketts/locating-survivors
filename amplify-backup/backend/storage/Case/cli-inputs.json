@@ -1,0 +1,10 @@
+{
+  "resourceName": "Case",
+  "tableName": "Case",
+  "partitionKey": {
+    "fieldName": "id",
+    "fieldType": "string"
+  },
+  "gsi": [],
+  "triggerFunctions": []
+}

@@ -1,0 +1,27 @@
+{
+  "permissions": {
+    "function": {
+      "deleteCase": [
+        "create",
+        "read",
+        "update",
+        "delete"
+      ],
+      "archiveCase": [
+        "create",
+        "read",
+        "update",
+        "delete"
+      ]
+    },
+    "storage": {
+      "Case": [
+        "create",
+        "read",
+        "update",
+        "delete"
+      ]
+    }
+  },
+  "lambdaLayers": []
+}

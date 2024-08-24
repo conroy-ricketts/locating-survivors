@@ -1,0 +1,762 @@
+{
+  "api": {
+    "lsApi": {
+      "dependsOn": [
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "basicFunction"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "API Gateway"
+    }
+  },
+  "auth": {
+    "lsAuth": {
+      "customAuth": false,
+      "dependsOn": [],
+      "frontendAuthConfig": {
+        "mfaConfiguration": "ON",
+        "mfaTypes": [
+          "TOTP"
+        ],
+        "passwordProtectionSettings": {
+          "passwordPolicyCharacters": [
+            "REQUIRES_LOWERCASE",
+            "REQUIRES_UPPERCASE",
+            "REQUIRES_NUMBERS",
+            "REQUIRES_SYMBOLS"
+          ],
+          "passwordPolicyMinLength": 8
+        },
+        "signupAttributes": [
+          "EMAIL",
+          "NAME"
+        ],
+        "socialProviders": [],
+        "usernameAttributes": [],
+        "verificationMechanisms": [
+          "EMAIL"
+        ]
+      },
+      "providerPlugin": "awscloudformation",
+      "service": "Cognito"
+    }
+  },
+  "function": {
+    "archiveCase": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "Name",
+            "Arn",
+            "StreamArn"
+          ],
+          "category": "storage",
+          "resourceName": "Case"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "archiveDeleteCase": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "Name"
+          ],
+          "category": "function",
+          "resourceName": "deleteCase"
+        },
+        {
+          "attributes": [
+            "Name"
+          ],
+          "category": "function",
+          "resourceName": "archiveCase"
+        },
+        {
+          "attributes": [
+            "Name",
+            "Arn",
+            "StreamArn"
+          ],
+          "category": "storage",
+          "resourceName": "Case"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "basicFunction": {
+      "build": true,
+      "dependsOn": [],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "deleteCase": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "Name",
+            "Arn",
+            "StreamArn"
+          ],
+          "category": "storage",
+          "resourceName": "Case"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "deleteECR": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "Name",
+            "Arn",
+            "StreamArn"
+          ],
+          "category": "storage",
+          "resourceName": "ECR"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "disableEvent": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "Name"
+          ],
+          "category": "function",
+          "resourceName": "handler"
+        },
+        {
+          "attributes": [
+            "Name",
+            "Arn",
+            "StreamArn"
+          ],
+          "category": "storage",
+          "resourceName": "Case"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "emailListener": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "Name"
+          ],
+          "category": "function",
+          "resourceName": "emailScraper"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "emailScraper": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "Name"
+          ],
+          "category": "function",
+          "resourceName": "updateCase"
+        },
+        {
+          "attributes": [
+            "Name",
+            "Arn",
+            "StreamArn"
+          ],
+          "category": "storage",
+          "resourceName": "Case"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "emailSender": {
+      "build": true,
+      "dependsOn": [],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "getCase": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "Name",
+            "Arn",
+            "StreamArn"
+          ],
+          "category": "storage",
+          "resourceName": "Case"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "getECR": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "ApiName",
+            "ApiId"
+          ],
+          "category": "api",
+          "resourceName": "lsApi"
+        },
+        {
+          "attributes": [
+            "UserPoolId"
+          ],
+          "category": "auth",
+          "resourceName": "lsAuth"
+        },
+        {
+          "attributes": [
+            "Name",
+            "Arn",
+            "StreamArn"
+          ],
+          "category": "storage",
+          "resourceName": "Case"
+        },
+        {
+          "attributes": [
+            "Name",
+            "Arn",
+            "StreamArn"
+          ],
+          "category": "storage",
+          "resourceName": "ECR"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "handler": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "Name"
+          ],
+          "category": "function",
+          "resourceName": "emailSender"
+        },
+        {
+          "attributes": [
+            "Name"
+          ],
+          "category": "function",
+          "resourceName": "emailScraper"
+        },
+        {
+          "attributes": [
+            "Name"
+          ],
+          "category": "function",
+          "resourceName": "emailListener"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "handlerWrapper": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "ApiName",
+            "ApiId"
+          ],
+          "category": "api",
+          "resourceName": "lsApi"
+        },
+        {
+          "attributes": [
+            "UserPoolId"
+          ],
+          "category": "auth",
+          "resourceName": "lsAuth"
+        },
+        {
+          "attributes": [
+            "Name"
+          ],
+          "category": "function",
+          "resourceName": "handler"
+        },
+        {
+          "attributes": [
+            "Name"
+          ],
+          "category": "function",
+          "resourceName": "disableEvent"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "listCases": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "Name",
+            "Arn",
+            "StreamArn"
+          ],
+          "category": "storage",
+          "resourceName": "Case"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "postCase": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "ApiName",
+            "ApiId"
+          ],
+          "category": "api",
+          "resourceName": "lsApi"
+        },
+        {
+          "attributes": [
+            "UserPoolId"
+          ],
+          "category": "auth",
+          "resourceName": "lsAuth"
+        },
+        {
+          "attributes": [
+            "Name",
+            "Arn",
+            "StreamArn"
+          ],
+          "category": "storage",
+          "resourceName": "Case"
+        },
+        {
+          "attributes": [
+            "Name",
+            "Arn",
+            "StreamArn"
+          ],
+          "category": "storage",
+          "resourceName": "User"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "postECR": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "ApiName",
+            "ApiId"
+          ],
+          "category": "api",
+          "resourceName": "lsApi"
+        },
+        {
+          "attributes": [
+            "UserPoolId"
+          ],
+          "category": "auth",
+          "resourceName": "lsAuth"
+        },
+        {
+          "attributes": [
+            "Name",
+            "Arn",
+            "StreamArn"
+          ],
+          "category": "storage",
+          "resourceName": "Case"
+        },
+        {
+          "attributes": [
+            "Name",
+            "Arn",
+            "StreamArn"
+          ],
+          "category": "storage",
+          "resourceName": "ECR"
+        },
+        {
+          "attributes": [
+            "Name",
+            "Arn",
+            "StreamArn"
+          ],
+          "category": "storage",
+          "resourceName": "User"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "postPDF": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "updateCase": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "Name",
+            "Arn",
+            "StreamArn"
+          ],
+          "category": "storage",
+          "resourceName": "Case"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    }
+  },
+  "hosting": {
+    "S3AndCloudFront": {
+      "providerPlugin": "awscloudformation",
+      "service": "S3AndCloudFront"
+    }
+  },
+  "parameters": {
+    "AMPLIFY_function_archiveCase_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "archiveCase"
+        }
+      ]
+    },
+    "AMPLIFY_function_archiveCase_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "archiveCase"
+        }
+      ]
+    },
+    "AMPLIFY_function_archiveDeleteCase_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "archiveDeleteCase"
+        }
+      ]
+    },
+    "AMPLIFY_function_archiveDeleteCase_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "archiveDeleteCase"
+        }
+      ]
+    },
+    "AMPLIFY_function_basicFunction_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "basicFunction"
+        }
+      ]
+    },
+    "AMPLIFY_function_basicFunction_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "basicFunction"
+        }
+      ]
+    },
+    "AMPLIFY_function_deleteCase_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "deleteCase"
+        }
+      ]
+    },
+    "AMPLIFY_function_deleteCase_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "deleteCase"
+        }
+      ]
+    },
+    "AMPLIFY_function_deleteECR_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "deleteECR"
+        }
+      ]
+    },
+    "AMPLIFY_function_deleteECR_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "deleteECR"
+        }
+      ]
+    },
+    "AMPLIFY_function_disableEvent_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "disableEvent"
+        }
+      ]
+    },
+    "AMPLIFY_function_disableEvent_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "disableEvent"
+        }
+      ]
+    },
+    "AMPLIFY_function_emailListener_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "emailListener"
+        }
+      ]
+    },
+    "AMPLIFY_function_emailListener_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "emailListener"
+        }
+      ]
+    },
+    "AMPLIFY_function_emailScraper_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "emailScraper"
+        }
+      ]
+    },
+    "AMPLIFY_function_emailScraper_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "emailScraper"
+        }
+      ]
+    },
+    "AMPLIFY_function_emailSender_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "emailSender"
+        }
+      ]
+    },
+    "AMPLIFY_function_emailSender_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "emailSender"
+        }
+      ]
+    },
+    "AMPLIFY_function_getCase_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "getCase"
+        }
+      ]
+    },
+    "AMPLIFY_function_getCase_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "getCase"
+        }
+      ]
+    },
+    "AMPLIFY_function_getECR_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "getECR"
+        }
+      ]
+    },
+    "AMPLIFY_function_getECR_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "getECR"
+        }
+      ]
+    },
+    "AMPLIFY_function_handlerWrapper_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "handlerWrapper"
+        }
+      ]
+    },
+    "AMPLIFY_function_handlerWrapper_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "handlerWrapper"
+        }
+      ]
+    },
+    "AMPLIFY_function_handler_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "handler"
+        }
+      ]
+    },
+    "AMPLIFY_function_handler_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "handler"
+        }
+      ]
+    },
+    "AMPLIFY_function_listCases_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "listCases"
+        }
+      ]
+    },
+    "AMPLIFY_function_listCases_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "listCases"
+        }
+      ]
+    },
+    "AMPLIFY_function_postCase_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "postCase"
+        }
+      ]
+    },
+    "AMPLIFY_function_postCase_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "postCase"
+        }
+      ]
+    },
+    "AMPLIFY_function_postECR_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "postECR"
+        }
+      ]
+    },
+    "AMPLIFY_function_postECR_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "postECR"
+        }
+      ]
+    },
+    "AMPLIFY_function_postPDF_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "postPDF"
+        }
+      ]
+    },
+    "AMPLIFY_function_postPDF_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "postPDF"
+        }
+      ]
+    },
+    "AMPLIFY_function_updateCase_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "updateCase"
+        }
+      ]
+    },
+    "AMPLIFY_function_updateCase_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "updateCase"
+        }
+      ]
+    }
+  },
+  "storage": {
+    "Case": {
+      "providerPlugin": "awscloudformation",
+      "service": "DynamoDB"
+    },
+    "ECR": {
+      "providerPlugin": "awscloudformation",
+      "service": "DynamoDB"
+    },
+    "User": {
+      "providerPlugin": "awscloudformation",
+      "service": "DynamoDB"
+    },
+    "usersDb": {
+      "providerPlugin": "awscloudformation",
+      "service": "DynamoDB"
+    }
+  }
+}

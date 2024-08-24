@@ -1,0 +1,10 @@
+{
+  "resourceName": "ECR",
+  "tableName": "ECR",
+  "partitionKey": {
+    "fieldName": "id",
+    "fieldType": "string"
+  },
+  "gsi": [],
+  "triggerFunctions": []
+}
