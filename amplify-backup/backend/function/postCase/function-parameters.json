@@ -1,0 +1,35 @@
+{
+  "permissions": {
+    "api": {
+      "lsApi": [
+        "create",
+        "read",
+        "update",
+        "delete"
+      ]
+    },
+    "auth": {
+      "lsAuth": [
+        "create",
+        "read",
+        "update",
+        "delete"
+      ]
+    },
+    "storage": {
+      "Case": [
+        "create",
+        "read",
+        "update",
+        "delete"
+      ],
+      "User": [
+        "create",
+        "read",
+        "update",
+        "delete"
+      ]
+    }
+  },
+  "lambdaLayers": []
+}

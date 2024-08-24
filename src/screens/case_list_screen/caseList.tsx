@@ -7,16 +7,12 @@ import ClipLoader from 'react-spinners/ClipLoader'
 import AccessCaseViewContext from '../../context/accessCaseViewContext.tsx'
 import {exportCase} from '../../utils/exportCase.tsx'
 
-// This is NOT a model for an actual case from the backend. 
-// This is simply the information we need for displaying the case on the frontend. 
-// We should fill these parameters with data that we GET from the backend.
 interface CaseForDisplay {
     id: string,
     lastUpdate: string,
     status: string,
     duration: string,
     phoneNumber: string
-
 }
 
 export default function CaseListScreen(props): JSX.Element {
@@ -25,15 +21,16 @@ export default function CaseListScreen(props): JSX.Element {
     const navigate = useNavigate()
     const [isLoading, setIsLoading] = useState(false)
     const [showActiveOnly, setShowActiveOnly] = useState(true)
-    const [sortOrder, setSortOrder] = useState('Duration: Low to High') // none, lowToHigh, highToLow
+    const [sortOrder, setSortOrder] = useState('Duration: Low to High')
     const [initialCaseTimes, setInitialCaseTimes] = useState({})
     const { setAccessToCaseView } = useContext(AccessCaseViewContext)
+    const [searchQuery, setSearchQuery] = useState('')
 
     CaseListScreen.propTypes = {
         user: PropTypes.object.isRequired
     }
 
-    const {user} = props
+    const { user } = props
 
     useEffect(() => {
         const fetchData = async () => {
@@ -50,7 +47,7 @@ export default function CaseListScreen(props): JSX.Element {
     }
 
     function formattedDuration(createdAt) {
-        const currentTime = new Date() // Current time
+        const currentTime = new Date()
         const milliseconds = currentTime.getTime() - createdAt.getTime()
         const days = Math.floor(milliseconds / (24 * 60 * 60 * 1000))
         const hours = Math.floor((milliseconds % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000))
@@ -72,10 +69,10 @@ export default function CaseListScreen(props): JSX.Element {
         }
         const case_arr: CaseForDisplay[] = []
         const case_data_arr = []
-        try{
-            const response = await fetch(url,{headers})
+        try {
+            const response = await fetch(url, { headers })
             const data = await response.json()
-            data.data.forEach(function(user_case: any) {
+            data.data.forEach(function (user_case: any) {
                 const createdAt = new Date(user_case._createdAt)
                 initialCaseTimes[user_case.id] = createdAt
                 const formattedDifference = formattedDuration(createdAt)
@@ -91,11 +88,11 @@ export default function CaseListScreen(props): JSX.Element {
                 case_data_arr.push(user_case)
             })
             setInitialCaseTimes(initialCaseTimes)
-        }catch (error) {
-            console.log('Error: ',error)
+        } catch (error) {
+            console.log('Error: ', error)
         }
         setIsLoading(false)
-        return [case_arr ,case_data_arr]
+        return [case_arr, case_data_arr]
     }
 
     function getUserFullName(): string {
@@ -106,15 +103,15 @@ export default function CaseListScreen(props): JSX.Element {
         setAccessToCaseView(true)
         const caseData = case_data_arr.find(caseItem => caseItem.id === id)
 
-        navigate('/case_detail', {state: {caseData: caseData}})
+        navigate('/case_detail', { state: { caseData: caseData } })
     }
 
     function getCaseItem(
-        id: string, 
-        key: number, 
-        lastUpdate: string, 
-        status: string, 
-        duration: string, 
+        id: string,
+        key: number,
+        lastUpdate: string,
+        status: string,
+        duration: string,
         phoneNumber: string
     ): JSX.Element {
         const caseData = case_data_arr.find(caseItem => caseItem.id === id)
@@ -188,36 +185,46 @@ export default function CaseListScreen(props): JSX.Element {
                     <button id='cl-lp-bottom-button' onClick={() => navigateToNewCaseScreen()}>New Case...</button>
                 </div>
             </div>
-            <div id='cl-main-content'>
-                {cases
-                    .filter(caseForDisplay => !showActiveOnly || caseForDisplay.status === 'Open' || caseForDisplay.status === 'Pending Initial Update')
-                    .sort((a, b) => {
-                        if (sortOrder === 'Duration: Low to High') {
-                            return a.duration.localeCompare(b.duration)
-                        } else if (sortOrder === 'Duration: High to Low') {
-                            return b.duration.localeCompare(a.duration)
-                        } else {
-                            return 0
-                        }
-                    })
-                    .map((caseForDisplay, index) => (
-                        <>
-                            {getCaseItem(caseForDisplay.id, index, caseForDisplay.lastUpdate, caseForDisplay.status, caseForDisplay.duration, caseForDisplay.phoneNumber)}
-                        </>
-                    ))
-                }
-            </div>
-            {isLoading && (
-                <div className="loading-overlay">
-                    <ClipLoader />
+            <div id='cl-main-content-pane'>
+                <div id='cl-main-content-header'>
+                    <button id='cl-header-left-button' onClick={navigateToNewCaseScreen}>Create New Case</button>
+                    <p id='cl-header-center-text'>{`Case List for ${getUserFullName()}`}</p>
+                    <input
+                        type="text"
+                        placeholder="Search by phone number or status..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        id='cl-search-bar'
+                    />
                 </div>
-            )}
+                <div id='cl-case-item-container'>
+                    {isLoading ? <ClipLoader color='#002bff' loading={isLoading} size={150}/> :
+                        cases
+                            .filter(caseForDisplay => {
+                                const searchLower = searchQuery.toLowerCase()
+                                return (
+                                    (!showActiveOnly || caseForDisplay.status === 'Open' || caseForDisplay.status === 'Pending Initial Update') &&
+                                    (caseForDisplay.phoneNumber.toLowerCase().includes(searchLower) ||
+                                        caseForDisplay.status.toLowerCase().includes(searchLower))
+                                )
+                            })
+                            .sort((a, b) => {
+                                if (sortOrder === 'Duration: Low to High') {
+                                    return a.duration.localeCompare(b.duration)
+                                } else if (sortOrder === 'Duration: High to Low') {
+                                    return b.duration.localeCompare(a.duration)
+                                } else {
+                                    return 0
+                                }
+                            })
+                            .map((caseForDisplay, index) => (
+                                <React.Fragment key={index}>
+                                    {getCaseItem(caseForDisplay.id, index, caseForDisplay.lastUpdate, caseForDisplay.status, caseForDisplay.duration, caseForDisplay.phoneNumber)}
+                                </React.Fragment>
+                            ))
+                    }
+                </div>
+            </div>
         </div>
     )
-}
-
-function getUserRole(): string {
-    // "Operator" is the default role.
-    // TODO: We need to get this value from the backend.
-    return 'Operator'
 }

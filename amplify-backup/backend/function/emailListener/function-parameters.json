@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "function": {
+      "emailScraper": [
+        "create",
+        "read",
+        "update",
+        "delete"
+      ]
+    }
+  },
+  "lambdaLayers": []
+}
